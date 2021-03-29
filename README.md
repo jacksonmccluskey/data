@@ -47,39 +47,8 @@ $ jupyter notebook
 [I 20:50:56.397 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
 ```
 
-## *Note* - D3 version 4
-Since the book was published D3 has shifted versions, necessitating some conversion work from existing v3 visualizations. One key change is a flattening of the namespace, e.g.:
+## D3 Adaptation
 
-- d3.scale.linear ↦ d3.scaleLinear
-- d3.geo.path ↦ d3.geoPath
-
-This is an easy adaption. A harder on is the change in the way the `enter` method works, which affects the existing examples of the all important update pattern.
-
-A version 4 compliant Nobel Visualization can be found in the `nobel_viz_D3_v4` directory. The following code snippets from the Nobel barchart show the changes made to the update pattern and the use of the new `merge` method. Because the enter method no longer _magically_ updates its selector we need to merge back the original selection to the newly appended elements (created by data-joining) in order to change their attributes in one go.
-
-D3 Version 3:
-```
-        var bars = svg.selectAll(".bar")
-            .data(data, function(d) {
-                return d.code;
-            });
-
-        bars.enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", xPaddingLeft);
-
-        bars
-            .classed('active', function(d) {
-                return d.key === nbviz.activeCountry;
-            })
-            .transition().duration(nbviz.TRANS_DURATION)
-            .attr("x", function(d) { return xScale(d.code); })
-            .attr("width", xScale.rangeBand())
-            .attr("y", function(d) { return yScale(d.value); })
-            .attr("height", function(d) { return height - yScale(d.value); });
-
-        bars.exit().remove();
-```
 D3 Version 4:
 ```
         var bars = svg.selectAll(".bar")
